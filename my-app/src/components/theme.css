@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  /* Brand — your original cyan, used deliberately rather than everywhere */
+  --accent: #70e2ff;
+  --accent-dark: #2fb4dc;
+  --accent-ink: #0b3a4a;      /* for text on light cyan tints */
+
+  /* Neutrals */
+  --navy-900: #0b1a2b;
+  --navy-800: #14283f;
+  --ink-900: #1b2a41;
+  --ink-700: #3c4a5e;
+  --ink-500: #64748b;
+  --border: #e2e8f0;
+  --surface: #ffffff;
+  --bg: #f5f8fb;
+
+  /* Status / price */
+  --price: #0f9d58;
+  --danger: #dc3545;
+  --danger-dark: #bb2d3b;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.10);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.18);
+
+  --radius: 14px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --font-display: "Poppins", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+}

@@ -1,0 +1,132 @@
+/* Apackage.css — hotel sub-form extras */
+
+.ap-modal {
+  max-width: 500px;
+}
+
+.ap-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary, #6b6b85);
+  margin-bottom: 5px;
+  font-family: var(--font-main, 'Inter', sans-serif);
+}
+
+/* Toggle button for create-hotel sub-form */
+.ap-add-hotel-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1.5px dashed var(--purple-500, #6259d6);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--purple-500, #6259d6);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  margin-bottom: 4px;
+}
+
+.ap-add-hotel-toggle:hover {
+  background: var(--purple-100, #eeecfb);
+}
+
+/* Sub-form container */
+.ap-hotel-subform {
+  background: #f9f9fe;
+  border: 1px solid var(--border-light, #e8e8f2);
+  border-radius: 10px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.ap-hotel-subform h4 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a2e);
+  font-family: inherit;
+}
+
+.ap-hotel-error {
+  color: var(--red-500, #dc2626);
+  font-size: 12.5px;
+  background: var(--red-50, #fef2f2);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+/* Image preview grid */
+.ap-hotel-previews {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.ap-hotel-preview-wrap {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-light, #e8e8f2);
+  aspect-ratio: 1;
+}
+
+.ap-hotel-preview-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ap-remove-img {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(220, 38, 38, 0.85);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.ap-remove-img:hover {
+  background: var(--red-500, #dc2626);
+}
+
+.ap-hint {
+  margin: 3px 0 0;
+  font-size: 11.5px;
+  color: var(--text-muted, #9a9ab0);
+  font-family: inherit;
+}
+
+/* Plain file input — no drag-and-drop styling */
+.ap-file-btn {
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary, #1a1a2e);
+}
+
+@media (max-width: 480px) {
+  .ap-hotel-previews {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

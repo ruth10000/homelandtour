@@ -1,0 +1,370 @@
+@import "./theme.css";
+@import "./packages.css"; /* reuse .popup-overlay, .popup, .popup-buttons, .btn, .cancel-btn */
+
+* {
+  box-sizing: border-box;
+}
+
+/* ── Page wrapper ── */
+.padetail {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* ── Loading / Error states ── */
+.pd-state-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.pd-loading {
+  text-align: center;
+  color: var(--ink-500);
+  font-family: var(--font-body);
+}
+
+.pd-spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent-dark);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: pd-spin 0.8s linear infinite;
+}
+
+@keyframes pd-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pd-error {
+  text-align: center;
+  color: var(--ink-900);
+  font-family: var(--font-body);
+}
+
+.pd-error h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+/* ── Hero ── */
+.pd-hero {
+  position: relative;
+  height: 55vh;
+  min-height: 320px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
+}
+
+.pd-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.60) 100%
+  );
+}
+
+.pd-hero-caption {
+  position: relative;
+  z-index: 1;
+  padding: 28px 6%;
+  width: 100%;
+}
+
+.pd-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+}
+
+.pd-back-link:hover {
+  color: #ffffff;
+}
+
+/* back link on error/loading pages */
+.pd-state-container .pd-back-link {
+  color: var(--accent-dark);
+  margin-top: 16px;
+}
+
+.pd-back-link svg {
+  flex-shrink: 0;
+}
+
+.pd-hero-caption h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.pd-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pd-price-icon {
+  font-size: 1.2rem;
+}
+
+/* ── Hero bottom row (price + book button) ── */
+.pd-hero-bottom {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ── Book Now button — hero variant (solid) ── */
+.pd-book-btn {
+  padding: 11px 28px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fa7cff, #70c6ff);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  white-space: nowrap;
+}
+
+.pd-book-btn:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-md);
+}
+
+.pd-book-btn:active {
+  transform: scale(0.98);
+}
+
+/* ── Book Now button — info section variant (outline) ── */
+.pd-book-btn--outline {
+  margin-top: 20px;
+  background: transparent;
+  border: 2px solid var(--accent-dark);
+  color: var(--accent-dark);
+  padding: 10px 26px;
+}
+
+.pd-book-btn--outline:hover {
+  background: var(--accent-dark);
+  color: #ffffff;
+  transform: scale(1.02);
+}
+.pd-body {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 6% 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ── Info section ── */
+.pd-info {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.pd-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fafe;
+  color: var(--accent-dark);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(47, 180, 220, 0.2);
+}
+
+.pd-desc {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink-700);
+  margin: 0;
+}
+
+/* ── Section title ── */
+.pd-section-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink-900);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.pd-section-icon {
+  color: var(--accent-dark);
+  font-size: 1.2rem;
+}
+
+/* ── Hotel section ── */
+.pd-hotel-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Hotel card ── */
+.pd-hotel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Hotel image gallery ── */
+.pd-hotel-gallery {
+  display: grid;
+  gap: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* 1 image — full width */
+.pd-hotel-gallery--1 {
+  grid-template-columns: 1fr;
+}
+
+/* 2 images — side by side */
+.pd-hotel-gallery--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* 3 images — large left, two stacked right */
+.pd-hotel-gallery--3 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+}
+.pd-hotel-gallery--3 .pd-hotel-gallery-img:first-child {
+  grid-row: 1 / 3;
+}
+
+/* 4 images — 2×2 grid */
+.pd-hotel-gallery--4 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.pd-hotel-gallery-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.pd-hotel-gallery--1 .pd-hotel-gallery-img {
+  height: 260px;
+}
+
+.pd-hotel-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin: 0 0 10px;
+}
+
+.pd-hotel-info p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-500);
+  margin: 0;
+}
+
+/* ── No hotel ── */
+.pd-no-hotel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--ink-500);
+  font-family: var(--font-body);
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+}
+
+.pd-no-hotel-icon {
+  font-size: 2rem;
+  color: var(--border);
+}
+
+.pd-no-hotel p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .pd-hero {
+    height: 45vh;
+    min-height: 280px;
+  }
+
+  .pd-hotel-gallery--2,
+  .pd-hotel-gallery--3,
+  .pd-hotel-gallery--4 {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-hotel-gallery--3 .pd-hotel-gallery-img:first-child {
+    grid-row: auto;
+  }
+
+  .pd-hotel-gallery-img {
+    height: 200px;
+  }
+
+  .pd-body {
+    padding: 24px 5% 60px;
+  }
+
+  .pd-info,
+  .pd-hotel-section {
+    padding: 20px 18px;
+  }
+}

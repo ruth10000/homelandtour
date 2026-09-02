@@ -1,0 +1,144 @@
+@import "./theme.css";
+
+* {
+  box-sizing: border-box;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  z-index: 1000;
+  transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease), padding 0.35s var(--ease);
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+  padding: 12px 8%;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.logo-icon {
+  font-size: 1.4rem;
+  transform: rotate(-8deg);
+}
+
+/* Navigation */
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links li a {
+  position: relative;
+  text-decoration: none;
+  color: #b5cedf;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  padding: 6px 2px;
+  transition: color 0.25s var(--ease);
+}
+
+/* animated underline */
+.nav-links li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--ease);
+}
+
+.nav-links li a:hover {
+  color: #ffffff;
+}
+
+.nav-links li a:hover::after,
+.nav-links li a.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.nav-links li a.active {
+  color: var(--accent);
+}
+
+/* Hamburger */
+.menu-icon {
+  display: none;
+  font-size: 24px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: transform 0.2s var(--ease);
+}
+
+.menu-icon:hover {
+  transform: scale(1.08);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px 6%;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 28px 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s var(--ease), opacity 0.25s var(--ease);
+  }
+
+  .nav-links.active {
+    max-height: 400px;
+    opacity: 1;
+    box-shadow: var(--shadow-md);
+  }
+}

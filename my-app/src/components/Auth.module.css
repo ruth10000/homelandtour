@@ -1,0 +1,149 @@
+.authContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background: url("../assets/eth.jpg") no-repeat center center;
+  background-size: cover;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.authForm {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 28px;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+.authTitle {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.input:focus {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.error {
+  color: #ffb3b3;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(90deg, #b0c914 0%, #2ba655 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(43, 166, 85, 0.3);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.submitButton:hover {
+  filter: brightness(1.08);
+}
+
+.submitButton:active {
+  transform: scale(0.98);
+}
+
+.toggleText {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.toggleLink {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.toggleLink:hover {
+  text-decoration: underline;
+}
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  padding: 8px 16px;
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, #b0c914 0%, #2ba655 100%);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background: var(--red-500);
+  border-color: var(--red-500);
+  color: #fff;
+}
+@media (max-width: 480px) {
+  .authForm {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .authTitle {
+    font-size: 1.8rem;
+  }
+
+  .submitButton {
+    font-size: 1rem;
+  }
+}
