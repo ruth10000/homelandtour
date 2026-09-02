@@ -39,7 +39,7 @@ export default function Packages() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/packages")
+    fetch("https://homelandtour.onrender.com/api/packages")
       .then((res) => res.json())
       .then((data) => setPackageData(data))
       .catch((err) => console.log(err));
@@ -133,3 +133,4 @@ function PackCard({ _id, image, place, day, price, placeDetails, hotel, onBook }
     </div>
   );
 }
+

@@ -4,9 +4,9 @@ import "./Apackage.css";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaCalendarAlt, FaHotel, FaPlus, FaTimes } from "react-icons/fa";
 
-const API_BASE_URL   = "http://localhost:3001/api/packages";
-const HOTELS_API_URL = "http://localhost:3001/api/hotels";
-const IMAGE_BASE_URL = "http://localhost:3001/";
+const API_BASE_URL   = "https://homelandtour.onrender.com/api/packages";
+const HOTELS_API_URL = "https://homelandtour.onrender.com/api/hotels";
+const IMAGE_BASE_URL = "https://homelandtour.onrender.com/";
 
 export default function Apackage({ refreshDashboard }) {
   /* ─── package list ─── */
@@ -424,3 +424,4 @@ export default function Apackage({ refreshDashboard }) {
     </div>
   );
 }
+

@@ -22,7 +22,7 @@ export default function Padetail() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch(`http://localhost:3001/api/packages/${id}`)
+    fetch(`https://homelandtour.onrender.com/api/packages/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Package not found");
         return res.json();
@@ -195,3 +195,4 @@ export default function Padetail() {
     </>
   );
 }
+

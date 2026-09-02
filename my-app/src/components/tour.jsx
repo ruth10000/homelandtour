@@ -40,7 +40,7 @@ const minDate = tomorrow.toISOString().split("T")[0];
     e.target.reset();
   };
   useEffect(()=>{
-    fetch("http://localhost:3001/api/tours")
+    fetch("https://homelandtour.onrender.com/api/tours")
     .then((res)=>res.json()).then((data)=>setTours(data)).catch((err)=>console.log(err)) ;   
   },[]);
   

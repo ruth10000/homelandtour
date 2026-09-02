@@ -44,7 +44,9 @@ server/dist/
 # ==============================
 
 server/uploads/
-uploads/
+uploads/*
+!server/uploads/
+!server/uploads/**
 
 # ==============================
 # Logs

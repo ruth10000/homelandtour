@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./Adashboard.css";
 import { FaLocationDot } from "react-icons/fa6";
 
-const API_BASE_URL = "http://localhost:3001/api/tours";
-const IMAGE_BASE_URL = "http://localhost:3001/";
+const API_BASE_URL = "https://homelandtour.onrender.com/api/tours";
+const IMAGE_BASE_URL = "https://homelandtour.onrender.com/";
 
 export default function Atour({ refreshDashboard }) {  // State Management
   const [toursData, setToursData] = useState([]);
