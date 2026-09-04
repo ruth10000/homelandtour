@@ -1,27 +1,39 @@
 import Package from "../models/Package.js";
+import { uploadToCloudinary, deleteFromCloudinary } from "../utils/uploadToCloudinary.js";
 
 // Add Package
 const addPackage = async (req, res) => {
   try {
     const { place, day, placeDetails, price, hotelId } = req.body;
+
+    if (!place || day === undefined || !placeDetails || price === undefined) {
+      return res.status(400).json({ message: "place, day, placeDetails, and price are required." });
+    }
+
     if (!req.file) {
       return res.status(400).json({ message: "Image file is required" });
     }
-    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+    // Upload image buffer to Cloudinary under folder 'homeland-tour/packages'
+    const { secure_url, public_id } = await uploadToCloudinary(
+      req.file.buffer,
+      "homeland-tour/packages"
+    );
 
     const newPackage = new Package({
       place,
       day: Number(day),
       placeDetails,
       price: Number(price),
-      image: imageUrl,
+      image: secure_url,
+      imagePublicId: public_id,
       hotel: hotelId || undefined,
     });
 
     const savedPackage = await newPackage.save();
     res.status(201).json(savedPackage);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to add package" });
   }
 };
 
@@ -43,7 +55,7 @@ const getPackage = async (req, res) => {
     const packages = await Package.find(query).populate("hotel", "name");
     res.status(200).json(packages);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to fetch packages" });
   }
 };
 
@@ -59,7 +71,7 @@ const getPackageById = async (req, res) => {
 
     res.status(200).json(pkg);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to fetch package" });
   }
 };
 
@@ -76,23 +88,28 @@ const updatePackage = async (req, res) => {
     }
 
     let imageUrl = packageData.image;
+    let imagePublicId = packageData.imagePublicId;
+    let oldPublicIdToDelete = null;
 
     if (req.file) {
-      imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      const uploadResult = await uploadToCloudinary(
+        req.file.buffer,
+        "homeland-tour/packages"
+      );
+      imageUrl = uploadResult.secure_url;
+      oldPublicIdToDelete = packageData.imagePublicId;
+      imagePublicId = uploadResult.public_id;
     }
 
     const updateFields = {
-      place,
-      day: Number(day),
-      placeDetails,
-      price: Number(price),
+      place: place !== undefined ? place : packageData.place,
+      day: day !== undefined ? Number(day) : packageData.day,
+      placeDetails: placeDetails !== undefined ? placeDetails : packageData.placeDetails,
+      price: price !== undefined ? Number(price) : packageData.price,
       image: imageUrl,
+      imagePublicId,
     };
 
-    // Three-branch hotel logic:
-    // hotelId present + non-empty  → set to ObjectId
-    // hotelId present + empty ""   → null (remove hotel)
-    // hotelId not in body at all   → leave existing hotel unchanged
     if ("hotelId" in req.body) {
       updateFields.hotel = req.body.hotelId || null;
     }
@@ -103,9 +120,14 @@ const updatePackage = async (req, res) => {
       { new: true }
     ).populate("hotel", "name");
 
+    // Delete old Cloudinary image after new upload succeeds
+    if (oldPublicIdToDelete) {
+      await deleteFromCloudinary(oldPublicIdToDelete);
+    }
+
     res.status(200).json(updatedPackage);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to update package" });
   }
 };
 
@@ -120,11 +142,15 @@ const deletePackage = async (req, res) => {
       return res.status(404).json({ message: "Package not found" });
     }
 
+    if (packageData.imagePublicId) {
+      await deleteFromCloudinary(packageData.imagePublicId);
+    }
+
     await Package.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Package deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to delete package" });
   }
 };
 

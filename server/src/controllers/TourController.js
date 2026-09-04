@@ -1,25 +1,37 @@
 import Tour from "../models/Tour.js";
+import { uploadToCloudinary, deleteFromCloudinary } from "../utils/uploadToCloudinary.js";
 
 // Add Tour
 const addTour = async (req, res) => {
   try {
     const { place, placeDetails, price } = req.body;
+
+    if (!place || !placeDetails || price === undefined || price === "") {
+      return res.status(400).json({ message: "place, placeDetails, and price are required fields." });
+    }
+
     if (!req.file) {
       return res.status(400).json({ message: "Image file is required" });
     }
-    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+    // Upload image buffer to Cloudinary under folder 'homeland-tour/tours'
+    const { secure_url, public_id } = await uploadToCloudinary(
+      req.file.buffer,
+      "homeland-tour/tours"
+    );
 
     const newTour = new Tour({
       place,
       placeDetails,
       price: Number(price),
-      image: imageUrl,
+      image: secure_url,
+      imagePublicId: public_id,
     });
 
     const savedTour = await newTour.save();
     res.status(201).json(savedTour);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to add tour" });
   }
 };
 
@@ -29,7 +41,6 @@ const getTours = async (req, res) => {
     const { search } = req.query;
     let query = {};
 
-    // Filter by place or placeDetails if search query parameter exists
     if (search) {
       query = {
         $or: [
@@ -42,7 +53,7 @@ const getTours = async (req, res) => {
     const tours = await Tour.find(query);
     res.status(200).json(tours);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to fetch tours" });
   }
 };
 
@@ -59,26 +70,40 @@ const updateTour = async (req, res) => {
     }
 
     let imageUrl = tourData.image;
+    let imagePublicId = tourData.imagePublicId;
+    let oldPublicIdToDelete = null;
 
-    // Update image only if a new file is uploaded
+    // Update image if a new file is uploaded
     if (req.file) {
-      imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      const uploadResult = await uploadToCloudinary(
+        req.file.buffer,
+        "homeland-tour/tours"
+      );
+      imageUrl = uploadResult.secure_url;
+      oldPublicIdToDelete = tourData.imagePublicId;
+      imagePublicId = uploadResult.public_id;
     }
 
     const updatedTour = await Tour.findByIdAndUpdate(
       id,
       {
-        place,
-        placeDetails,
-        price: Number(price),
+        place: place !== undefined ? place : tourData.place,
+        placeDetails: placeDetails !== undefined ? placeDetails : tourData.placeDetails,
+        price: price !== undefined ? Number(price) : tourData.price,
         image: imageUrl,
+        imagePublicId,
       },
       { new: true }
     );
 
+    // Delete old Cloudinary image only AFTER the new upload and DB update succeeded
+    if (oldPublicIdToDelete) {
+      await deleteFromCloudinary(oldPublicIdToDelete);
+    }
+
     res.status(200).json(updatedTour);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to update tour" });
   }
 };
 
@@ -93,11 +118,16 @@ const deleteTour = async (req, res) => {
       return res.status(404).json({ message: "Tour not found" });
     }
 
+    // Delete image from Cloudinary if public_id exists
+    if (tourData.imagePublicId) {
+      await deleteFromCloudinary(tourData.imagePublicId);
+    }
+
     await Tour.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Tour deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "Failed to delete tour" });
   }
 };
 
