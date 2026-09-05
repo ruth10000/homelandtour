@@ -1,32 +1,32 @@
 import Package from "../models/Package.js";
-import { uploadToCloudinary, deleteFromCloudinary } from "../utils/uploadToCloudinary.js";
+import { bufferToBase64 } from "../utils/bufferToBase64.js";
 
 // Add Package
 const addPackage = async (req, res) => {
   try {
-    const { place, day, placeDetails, price, hotelId } = req.body;
+    const { place, day, placeDetails, price, hotelId, image: bodyImage } = req.body;
 
     if (!place || day === undefined || !placeDetails || price === undefined) {
       return res.status(400).json({ message: "place, day, placeDetails, and price are required." });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Image file is required" });
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = bufferToBase64(req.file);
+    } else if (bodyImage) {
+      imageUrl = bodyImage;
     }
 
-    // Upload image buffer to Cloudinary under folder 'homeland-tour/packages'
-    const { secure_url, public_id } = await uploadToCloudinary(
-      req.file.buffer,
-      "homeland-tour/packages"
-    );
+    if (!imageUrl) {
+      return res.status(400).json({ message: "Image file or base64 image data is required" });
+    }
 
     const newPackage = new Package({
       place,
       day: Number(day),
       placeDetails,
       price: Number(price),
-      image: secure_url,
-      imagePublicId: public_id,
+      image: imageUrl,
       hotel: hotelId || undefined,
     });
 
@@ -79,7 +79,7 @@ const getPackageById = async (req, res) => {
 const updatePackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { place, day, placeDetails, price, hotelId } = req.body;
+    const { place, day, placeDetails, price, hotelId, image: bodyImage } = req.body;
 
     const packageData = await Package.findById(id);
 
@@ -88,17 +88,11 @@ const updatePackage = async (req, res) => {
     }
 
     let imageUrl = packageData.image;
-    let imagePublicId = packageData.imagePublicId;
-    let oldPublicIdToDelete = null;
 
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(
-        req.file.buffer,
-        "homeland-tour/packages"
-      );
-      imageUrl = uploadResult.secure_url;
-      oldPublicIdToDelete = packageData.imagePublicId;
-      imagePublicId = uploadResult.public_id;
+      imageUrl = bufferToBase64(req.file);
+    } else if (bodyImage) {
+      imageUrl = bodyImage;
     }
 
     const updateFields = {
@@ -107,7 +101,6 @@ const updatePackage = async (req, res) => {
       placeDetails: placeDetails !== undefined ? placeDetails : packageData.placeDetails,
       price: price !== undefined ? Number(price) : packageData.price,
       image: imageUrl,
-      imagePublicId,
     };
 
     if ("hotelId" in req.body) {
@@ -119,11 +112,6 @@ const updatePackage = async (req, res) => {
       updateFields,
       { new: true }
     ).populate("hotel", "name");
-
-    // Delete old Cloudinary image after new upload succeeds
-    if (oldPublicIdToDelete) {
-      await deleteFromCloudinary(oldPublicIdToDelete);
-    }
 
     res.status(200).json(updatedPackage);
   } catch (error) {
@@ -140,10 +128,6 @@ const deletePackage = async (req, res) => {
 
     if (!packageData) {
       return res.status(404).json({ message: "Package not found" });
-    }
-
-    if (packageData.imagePublicId) {
-      await deleteFromCloudinary(packageData.imagePublicId);
     }
 
     await Package.findByIdAndDelete(id);

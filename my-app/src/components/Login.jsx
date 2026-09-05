@@ -20,7 +20,7 @@ const Login = () => {
 
   const onSubmit = async (data) => {
   try {
-    const response = await axios.post('https://homelandtour.onrender.com/api/auth/login', data, {
+    const response = await axios.post('https://homelandtour.vercel.app/api/auth/login', data, {
       withCredentials: true, // to send and receive cookies
     });
 
@@ -106,3 +106,4 @@ const Login = () => {
 };
 
 export default Login;
+

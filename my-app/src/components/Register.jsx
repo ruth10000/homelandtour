@@ -20,7 +20,7 @@ const onSubmit = async (data) => {
   try {
     console.log('Registration form submitted', data);
 
-    const response = await axios.post('https://homelandtour.onrender.com/api/auth/register', data);
+    const response = await axios.post('https://homelandtour.vercel.app/api/auth/register', data);
 
     if (response.status === 201) {
       alert('Registration successful!');
@@ -126,3 +126,4 @@ const onSubmit = async (data) => {
 };
 
 export default Register;
+

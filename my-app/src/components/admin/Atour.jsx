@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./Adashboard.css";
 import { FaLocationDot } from "react-icons/fa6";
 
-const API_BASE_URL = "https://homelandtour.onrender.com/api/tours";
-const IMAGE_BASE_URL = "https://homelandtour.onrender.com/";
+const API_BASE_URL = "https://homelandtour.vercel.app/api/tours";
+const IMAGE_BASE_URL = "https://homelandtour.vercel.app/";
 
 export default function Atour({ refreshDashboard }) {  // State Management
   const [toursData, setToursData] = useState([]);
@@ -102,7 +102,7 @@ export default function Atour({ refreshDashboard }) {  // State Management
     });
     setImageFile(null);
 
-    const existingImageUrl = tour.image?.startsWith("http")
+    const existingImageUrl = tour.image?.startsWith("http") || tour.image?.startsWith("data:")
       ? tour.image
       : `${IMAGE_BASE_URL}${tour.image}`;
     setImagePreview(existingImageUrl);
@@ -242,7 +242,7 @@ export default function Atour({ refreshDashboard }) {  // State Management
           {toursData.length > 0 ? (
             toursData.map((tour) => {
               const tourId = tour._id || tour.id;
-              const imageUrl = tour.image?.startsWith("http")
+              const imageUrl = tour.image?.startsWith("http") || tour.image?.startsWith("data:")
                 ? tour.image
                 : `${IMAGE_BASE_URL}${tour.image}`;
 
@@ -396,3 +396,4 @@ export default function Atour({ refreshDashboard }) {  // State Management
     </div>
   );
 }
+

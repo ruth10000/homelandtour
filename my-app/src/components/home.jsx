@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./home.css";
 import Navbar from "./navbar";
 
-const TOUR_API_URL = "https://homelandtour.onrender.com/api/tours";
-const PACKAGE_API_URL = "https://homelandtour.onrender.com/api/packages";
+const TOUR_API_URL = "https://homelandtour.vercel.app/api/tours";
+const PACKAGE_API_URL = "https://homelandtour.vercel.app/api/packages";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -183,3 +183,4 @@ export default function Home() {
     </>
   );
 }
+

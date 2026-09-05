@@ -14,10 +14,7 @@ const hotelSchema = new mongoose.Schema(
         message: "A hotel must have between 1 and 4 images.",
       },
     },
-    imagePublicIds: {
-      type: [String],
-      default: [],
-    },
+
     description: {
       type: String,
     },

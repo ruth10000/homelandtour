@@ -4,8 +4,8 @@ import "./Adashboard.css";
 import Atour from "./atour";
 import Apackage from "./Apackage";
 
-const API_BASE_URL_T = "https://homelandtour.onrender.com/api/tours";
-const API_BASE_URL_P = "https://homelandtour.onrender.com/api/packages";
+const API_BASE_URL_T = "https://homelandtour.vercel.app/api/tours";
+const API_BASE_URL_P = "https://homelandtour.vercel.app/api/packages";
 
 export default function Adashboard() {
   const navigate = useNavigate();
@@ -198,3 +198,4 @@ useEffect(() => {
     </div>
   );
 }
+

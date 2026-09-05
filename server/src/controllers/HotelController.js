@@ -1,37 +1,36 @@
 import Hotel from "../models/Hotel.js";
-import { uploadToCloudinary, deleteFromCloudinary } from "../utils/uploadToCloudinary.js";
+import { bufferToBase64 } from "../utils/bufferToBase64.js";
 
-// Add Hotel — accepts up to 4 images via multer array upload
+// Add Hotel — accepts up to 4 images via multer array upload or base64 strings array in JSON body
 const addHotel = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, images: bodyImages } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: "Hotel name is required" });
     }
 
-    if (!req.files || req.files.length === 0) {
+    let imageUrls = [];
+
+    if (req.files && req.files.length > 0) {
+      if (req.files.length > 4) {
+        return res.status(400).json({ message: "A hotel can have at most 4 images" });
+      }
+      imageUrls = req.files.map((file) => bufferToBase64(file));
+    } else if (Array.isArray(bodyImages) && bodyImages.length > 0) {
+      if (bodyImages.length > 4) {
+        return res.status(400).json({ message: "A hotel can have at most 4 images" });
+      }
+      imageUrls = bodyImages;
+    }
+
+    if (imageUrls.length === 0) {
       return res.status(400).json({ message: "At least one hotel image is required" });
     }
-
-    if (req.files.length > 4) {
-      return res.status(400).json({ message: "A hotel can have at most 4 images" });
-    }
-
-    // Upload all files to Cloudinary under folder 'homeland-tour/hotels'
-    const uploadPromises = req.files.map((file) =>
-      uploadToCloudinary(file.buffer, "homeland-tour/hotels")
-    );
-
-    const uploadResults = await Promise.all(uploadPromises);
-
-    const imageUrls = uploadResults.map((res) => res.secure_url);
-    const imagePublicIds = uploadResults.map((res) => res.public_id);
 
     const newHotel = new Hotel({
       name,
       images: imageUrls,
-      imagePublicIds,
       description: description || "",
     });
 
@@ -61,14 +60,6 @@ const deleteHotel = async (req, res) => {
 
     if (!hotel) {
       return res.status(404).json({ message: "Hotel not found" });
-    }
-
-    // Delete all associated images from Cloudinary
-    if (hotel.imagePublicIds && hotel.imagePublicIds.length > 0) {
-      const deletePromises = hotel.imagePublicIds.map((publicId) =>
-        deleteFromCloudinary(publicId)
-      );
-      await Promise.all(deletePromises);
     }
 
     await Hotel.findByIdAndDelete(id);

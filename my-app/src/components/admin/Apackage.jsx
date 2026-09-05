@@ -4,9 +4,9 @@ import "./Apackage.css";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaCalendarAlt, FaHotel, FaPlus, FaTimes } from "react-icons/fa";
 
-const API_BASE_URL   = "https://homelandtour.onrender.com/api/packages";
-const HOTELS_API_URL = "https://homelandtour.onrender.com/api/hotels";
-const IMAGE_BASE_URL = "https://homelandtour.onrender.com/";
+const API_BASE_URL   = "https://homelandtour.vercel.app/api/packages";
+const HOTELS_API_URL = "https://homelandtour.vercel.app/api/hotels";
+const IMAGE_BASE_URL = "https://homelandtour.vercel.app/";
 
 export default function Apackage({ refreshDashboard }) {
   /* ─── package list ─── */
@@ -106,7 +106,7 @@ export default function Apackage({ refreshDashboard }) {
       price: pkg.price, hotelId,
     });
     setImageFile(null);
-    setImagePreview(pkg.image?.startsWith("http") ? pkg.image : `${IMAGE_BASE_URL}${pkg.image}`);
+    setImagePreview(pkg.image?.startsWith("http") || pkg.image?.startsWith("data:") ? pkg.image : `${IMAGE_BASE_URL}${pkg.image}`);
     setError(null); setShowHotelForm(false);
     fetchHotels(); setOpenModal(true);
   };
@@ -259,7 +259,7 @@ export default function Apackage({ refreshDashboard }) {
         <div className="cards-grid">
           {filteredPackages.length > 0 ? filteredPackages.map((pkg) => {
             const pkgId    = pkg._id || pkg.id;
-            const imageUrl = pkg.image?.startsWith("http") ? pkg.image : `${IMAGE_BASE_URL}${pkg.image}`;
+            const imageUrl = pkg.image?.startsWith("http") || pkg.image?.startsWith("data:") ? pkg.image : `${IMAGE_BASE_URL}${pkg.image}`;
             return (
               <div className="tour-card" key={pkgId}>
                 <img src={imageUrl} alt={pkg.place} />
@@ -424,4 +424,5 @@ export default function Apackage({ refreshDashboard }) {
     </div>
   );
 }
+
 

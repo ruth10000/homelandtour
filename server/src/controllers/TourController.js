@@ -1,31 +1,31 @@
 import Tour from "../models/Tour.js";
-import { uploadToCloudinary, deleteFromCloudinary } from "../utils/uploadToCloudinary.js";
+import { bufferToBase64 } from "../utils/bufferToBase64.js";
 
 // Add Tour
 const addTour = async (req, res) => {
   try {
-    const { place, placeDetails, price } = req.body;
+    const { place, placeDetails, price, image: bodyImage } = req.body;
 
     if (!place || !placeDetails || price === undefined || price === "") {
       return res.status(400).json({ message: "place, placeDetails, and price are required fields." });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Image file is required" });
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = bufferToBase64(req.file);
+    } else if (bodyImage) {
+      imageUrl = bodyImage;
     }
 
-    // Upload image buffer to Cloudinary under folder 'homeland-tour/tours'
-    const { secure_url, public_id } = await uploadToCloudinary(
-      req.file.buffer,
-      "homeland-tour/tours"
-    );
+    if (!imageUrl) {
+      return res.status(400).json({ message: "Image file or base64 image data is required" });
+    }
 
     const newTour = new Tour({
       place,
       placeDetails,
       price: Number(price),
-      image: secure_url,
-      imagePublicId: public_id,
+      image: imageUrl,
     });
 
     const savedTour = await newTour.save();
@@ -61,7 +61,7 @@ const getTours = async (req, res) => {
 const updateTour = async (req, res) => {
   try {
     const { id } = req.params;
-    const { place, placeDetails, price } = req.body;
+    const { place, placeDetails, price, image: bodyImage } = req.body;
 
     const tourData = await Tour.findById(id);
 
@@ -70,18 +70,11 @@ const updateTour = async (req, res) => {
     }
 
     let imageUrl = tourData.image;
-    let imagePublicId = tourData.imagePublicId;
-    let oldPublicIdToDelete = null;
 
-    // Update image if a new file is uploaded
     if (req.file) {
-      const uploadResult = await uploadToCloudinary(
-        req.file.buffer,
-        "homeland-tour/tours"
-      );
-      imageUrl = uploadResult.secure_url;
-      oldPublicIdToDelete = tourData.imagePublicId;
-      imagePublicId = uploadResult.public_id;
+      imageUrl = bufferToBase64(req.file);
+    } else if (bodyImage) {
+      imageUrl = bodyImage;
     }
 
     const updatedTour = await Tour.findByIdAndUpdate(
@@ -91,15 +84,9 @@ const updateTour = async (req, res) => {
         placeDetails: placeDetails !== undefined ? placeDetails : tourData.placeDetails,
         price: price !== undefined ? Number(price) : tourData.price,
         image: imageUrl,
-        imagePublicId,
       },
       { new: true }
     );
-
-    // Delete old Cloudinary image only AFTER the new upload and DB update succeeded
-    if (oldPublicIdToDelete) {
-      await deleteFromCloudinary(oldPublicIdToDelete);
-    }
 
     res.status(200).json(updatedTour);
   } catch (error) {
@@ -116,11 +103,6 @@ const deleteTour = async (req, res) => {
 
     if (!tourData) {
       return res.status(404).json({ message: "Tour not found" });
-    }
-
-    // Delete image from Cloudinary if public_id exists
-    if (tourData.imagePublicId) {
-      await deleteFromCloudinary(tourData.imagePublicId);
     }
 
     await Tour.findByIdAndDelete(id);

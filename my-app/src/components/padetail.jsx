@@ -22,7 +22,7 @@ export default function Padetail() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch(`https://homelandtour.onrender.com/api/packages/${id}`)
+    fetch(`https://homelandtour.vercel.app/api/packages/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Package not found");
         return res.json();
@@ -195,4 +195,5 @@ export default function Padetail() {
     </>
   );
 }
+
 

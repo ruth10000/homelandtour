@@ -22,9 +22,6 @@ const packageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    imagePublicId: {
-      type: String,
-    },
     hotel: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Hotel",
