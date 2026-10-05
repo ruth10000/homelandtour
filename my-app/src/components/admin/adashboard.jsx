@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Adashboard.css";
-import Atour from "./atour";
 import Apackage from "./Apackage";
 
 const API_BASE_URL_T = "https://homelandtour.vercel.app/api/tours";
